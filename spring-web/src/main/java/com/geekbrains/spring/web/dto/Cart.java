@@ -31,43 +31,49 @@ public class Cart {
         }
     }
 
-    public boolean addProductCount(Long id){
-        for(OrderItemDto o: items){
-            if(o.getProductId().equals(id)){
-                o.changeQuantity(1);
-                recalculate();
-                return true;
-            }
-        }
-        return false;
+    //добавляет один товар в корзину
+    public void addProduct(Product product) {
+        addProduct(product, 1);
     }
 
-    public void addProduct(Product product){
-        if(addProductCount(product.getId())){
-            return;
-        }
-        items.add(new OrderItemDto(product));
+    //добавляет несколько товаров в конзину
+    public void addProduct(Product product, int delta){
+        OrderItemDto o = findOrderInItems(product);
+        if(o != null)
+            o.changeQuantity(delta);
+        else
+            items.add(new OrderItemDto(product, delta));
         recalculate();
     }
 
-    private void recalculate(){
-        totalPrice = 0;
-        for(OrderItemDto o: items){
-            totalPrice += o.getPrice();
-        }
+    //проверяет, есть ли такой товар в корзине
+    public OrderItemDto findOrderInItems(Product p) {
+        for(OrderItemDto o : items)
+            if(o.getProductId().equals(p.getId()))
+                return o;
+        return null;
     }
 
-    public void removeProduct(Long id){
+    //полностью удаляет товар из коризны
+    public void removeProduct(Long id) {
         items.removeIf(o -> o.getProductId().equals(id));
         recalculate();
     }
 
-    public void decreaseProduct(Long id){
+    //уменьшает количество товара на один,
+    //или удаляет, если кол-во меньше одного
+    public void decreaseProduct(Long id) {
+        decreaseProduct(id, -1);
+    }
+
+    //уменьшает количество товара на delta,
+    //или удаляет, если кол-во меньше delta
+    public void decreaseProduct(Long id, int delta) {
         Iterator<OrderItemDto> iter = items.iterator();
         while (iter.hasNext()){
             OrderItemDto o = iter.next();
             if(o.getProductId().equals(id)){
-                o.changeQuantity(-1);
+                o.changeQuantity(delta);
                 if(o.getQuantity() <= 0){
                     iter.remove();
                 }
@@ -80,5 +86,12 @@ public class Cart {
     public void clear(){
         items.clear();
         totalPrice = 0;
+    }
+
+    private void recalculate(){
+        totalPrice = 0;
+        for(OrderItemDto o: items){
+            totalPrice += o.getPrice();
+        }
     }
 }
