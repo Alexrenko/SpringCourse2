@@ -94,4 +94,5 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
     }
 
     $scope.loadProducts();
+    $scope.loadCart();
 });
