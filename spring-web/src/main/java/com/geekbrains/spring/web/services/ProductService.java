@@ -16,8 +16,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ProductsService {
+public class ProductService {
     private final ProductsRepository productsRepository;
+
+    public void print() {
+        System.out.println("Я ProductsService");
+    }
 
     public Page<Product> findAll(Integer minPrice, Integer maxPrice, String partTitle, Integer page) {
         Specification<Product> spec = Specification.where(null);

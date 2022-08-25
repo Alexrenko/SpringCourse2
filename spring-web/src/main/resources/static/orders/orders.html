@@ -1,0 +1,21 @@
+<div>
+    <h1>Это оформление заказа!</h1>
+
+    <form novalidate>
+        <input class="form-control" type="text" placeholder="Номер телефона получателя" ng-model="orderDetails.phone">
+        <p></p>
+        <input class="form-control" type="text" placeholder="Адрес доставки" ng-model="orderDetails.address">
+        <p></p>
+    </form>
+
+    <p>
+        <button class="btn btn-secondary" ng-click="clearCart()">Очистить корзину</button>
+    </p>
+
+    <p>
+        <button class="btn btn-secondary" ng-click="disabledCheckOut()"
+                ng-show="!isUserLoggedIn() && Cart.items.length > 0">Оформить заказ
+        </button>
+    </p>
+
+</div>

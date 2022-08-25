@@ -1,9 +1,11 @@
 package com.geekbrains.spring.web.dto;
 
 import com.geekbrains.spring.web.entities.Product;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class OrderItemDto {
 
     private Long productId;
@@ -18,6 +20,11 @@ public class OrderItemDto {
         this.quantity = 1;
         this.pricePerProduct = product.getPrice();
         this.price = product.getPrice();
+    }
+
+    public OrderItemDto(Product product, int quantity) {
+        this(product);
+        this.quantity = quantity;
     }
 
     public void changeQuantity(int delta){
