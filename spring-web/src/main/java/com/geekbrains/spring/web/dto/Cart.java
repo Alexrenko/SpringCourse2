@@ -2,6 +2,7 @@ package com.geekbrains.spring.web.dto;
 
 import com.geekbrains.spring.web.entities.Product;
 import lombok.Data;
+import org.springframework.cache.CacheManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,7 +14,10 @@ public class Cart {
     private List<OrderItemDto> items;
     private  int totalPrice;
 
-    public Cart(String cartName){
+    public Cart() {
+    }
+
+    public Cart(String cartName, CacheManager cacheManager){
         this.items = new ArrayList<>();
         this.totalPrice = 0;
     }

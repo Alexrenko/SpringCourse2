@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CartService {
-    private final ProductsService productsService;
+    private final ProductService productService;
     private final CacheManager cacheManager;
     private Cart cart;
     @Value("${other.cache.carts}")
@@ -24,21 +24,21 @@ public class CartService {
     public Cart getCurrentCart(String cartName){
         cart = cacheManager.getCache(CARTS_CACHE).get(cartName, Cart.class);
         if(!Optional.ofNullable(cart).isPresent()){
-            cart = new Cart(cartName);
+            cart = new Cart(cartName, cacheManager);
             cacheManager.getCache(CARTS_CACHE).put(cartName, cart);
         }
         return cart;
     }
 
-    @CachePut(value = "${other.cache.carts}", key = "#cartName")
+    @CachePut(value = "CartsCache", key = "#cartName")
     public Cart addProductByIdToCart(Long id, String cartName, int quantity){
         Cart cart = getCurrentCart(cartName);
-        Product product = productsService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Не удалось найти продукт"));
+        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Не удалось найти продукт"));
         cart.addProduct(product, quantity);
         return cart;
     }
 
-    @CachePut(value = "${other.cache.carts}", key = "#cartName")
+    @CachePut(value = "CartsCache", key = "#cartName")
     public Cart removeProduct(Long id, String cartName){
         Cart cart = getCurrentCart(cartName);
         if (isItemInTheCart(id))
@@ -48,7 +48,7 @@ public class CartService {
         return cart;
     }
 
-    @CachePut(value = "${other.cache.carts}", key = "#cartName")
+    @CachePut(value = "CartsCache", key = "#cartName")
     public Cart decreaseProduct(Long id, String cartName, int delta){
         Cart cart = getCurrentCart(cartName);
         if (delta > 0)
@@ -60,7 +60,7 @@ public class CartService {
         return cart;
     }
 
-    @CachePut(value = "${other.cache.carts}", key = "#cartName")
+    @CachePut(value = "CartsCache", key = "#cartName")
     public Cart clear(String cartName){
         Cart cart = getCurrentCart(cartName);
         cart.clear();
@@ -68,7 +68,7 @@ public class CartService {
     }
 
     private boolean isItemInTheCart(Long id){
-        Product product = productsService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Не удалось найти продукт"));
+        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Не удалось найти продукт"));
         if (cart.findOrderInItems(product) != null)
             return true;
         return false;

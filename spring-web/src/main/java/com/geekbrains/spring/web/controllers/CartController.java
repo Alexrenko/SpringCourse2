@@ -1,10 +1,10 @@
 package com.geekbrains.spring.web.controllers;
 
 import com.geekbrains.spring.web.dto.Cart;
-import com.geekbrains.spring.web.entities.User;
-import com.geekbrains.spring.web.repositories.UserRepository;
 import com.geekbrains.spring.web.services.CartService;
+import com.geekbrains.spring.web.utils.ServiceStatistic;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CartController {
     private final CartService service;
-    private UserRepository userRepository;
+
+    @Autowired
+    private ServiceStatistic serviceStatistic;
 
     @PostMapping
     public Cart getCurrentCart(@RequestBody String cartName){

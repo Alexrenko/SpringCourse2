@@ -4,7 +4,7 @@ import com.geekbrains.spring.web.converters.ProductConverter;
 import com.geekbrains.spring.web.dto.ProductDto;
 import com.geekbrains.spring.web.entities.Product;
 import com.geekbrains.spring.web.exceptions.ResourceNotFoundException;
-import com.geekbrains.spring.web.services.ProductsService;
+import com.geekbrains.spring.web.services.ProductService;
 import com.geekbrains.spring.web.validators.ProductValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductsController {
-    private final ProductsService productsService;
+    private final ProductService productService;
     private final ProductConverter productConverter;
     private final ProductValidator productValidator;
 
@@ -28,14 +28,14 @@ public class ProductsController {
         if (page < 1) {
             page = 1;
         }
-        return productsService.findAll(minPrice, maxPrice, titlePart, page).map(
+        return productService.findAll(minPrice, maxPrice, titlePart, page).map(
                 p -> productConverter.entityToDto(p)
         );
     }
 
     @GetMapping("/{id}")
     public ProductDto getProductById(@PathVariable Long id) {
-        Product product = productsService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found, id: " + id));
+        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found, id: " + id));
         return productConverter.entityToDto(product);
     }
 
@@ -43,19 +43,19 @@ public class ProductsController {
     public ProductDto saveNewProduct(@RequestBody ProductDto productDto) {
         productValidator.validate(productDto);
         Product product = productConverter.dtoToEntity(productDto);
-        product = productsService.save(product);
+        product = productService.save(product);
         return productConverter.entityToDto(product);
     }
 
     @PutMapping
     public ProductDto updateProduct(@RequestBody ProductDto productDto) {
         productValidator.validate(productDto);
-        Product product = productsService.update(productDto);
+        Product product = productService.update(productDto);
         return productConverter.entityToDto(product);
     }
 
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {
-        productsService.deleteById(id);
+        productService.deleteById(id);
     }
 }

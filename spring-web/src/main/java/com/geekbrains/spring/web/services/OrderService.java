@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final CartService cartService;
-    private final ProductsService productsService;
+    private final ProductService productService;
     private final OrderRepository orderRepository;
 
 
@@ -35,7 +35,7 @@ public class OrderService {
                     orderItem.setOrder(order);
                     orderItem.setQuantity(o.getQuantity());
                     orderItem.setPricePerProduct(o.getPricePerProduct());
-                    orderItem.setProduct(productsService.findById(o.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Продукт не найден")));
+                    orderItem.setProduct(productService.findById(o.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Продукт не найден")));
                     return orderItem;
                 }).collect(Collectors.toList());
         order.setItems(items);
