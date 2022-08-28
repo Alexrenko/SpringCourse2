@@ -12,12 +12,17 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ProductsService {
+public class ProductService {
     private final ProductsRepository productsRepository;
+
+    public void print() {
+        System.out.println("Я ProductsService");
+    }
 
     public Page<Product> findAll(Integer minPrice, Integer maxPrice, String partTitle, Integer page) {
         Specification<Product> spec = Specification.where(null);
@@ -32,6 +37,10 @@ public class ProductsService {
         }
 
         return productsRepository.findAll(spec, PageRequest.of(page - 1, 50));
+    }
+
+    public List<Product> findAllProducts() {
+        return productsRepository.findAll();
     }
 
     public Optional<Product> findById(Long id) {
