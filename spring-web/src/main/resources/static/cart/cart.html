@@ -25,4 +25,9 @@
         <button class="btn btn-secondary" ng-click="clearCart()">Очистить корзину</button>
     </p>
 
+    <p>
+        <button class="btn btn-secondary" ng-click="goToOrders()"
+                ng-show="isUserLoggedIn() && Cart.items.length > 0">Оформить заказ</button>
+    </p>
+
 </div>

@@ -11,7 +11,7 @@ angular.module('store-front').controller('productController', function ($scope, 
                 max_price: $scope.filter ? $scope.filter.max_price : null
             }
         }).then(function (response) {
-            $scope.ProductsPage = response.data;
+            $scope.ProductsPage = response.data
         });
     };
 
