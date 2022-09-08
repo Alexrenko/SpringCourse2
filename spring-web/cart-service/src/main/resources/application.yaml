@@ -1,0 +1,8 @@
+server:
+  port: 5003
+  servlet:
+    context-path: /cart-service
+
+other:
+  cache:
+    carts: "CartsCache"
