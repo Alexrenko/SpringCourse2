@@ -17,7 +17,7 @@ angular.module('store-front').controller('productController', function ($scope, 
     };
 
     $scope.addToCart = function (productId) {
-        $http.post(gatewayPath + '/core/api/v1/carts/add/' + productId, $localStorage.cartName)
+        $http.post(gatewayPath + '/cart/api/v1/carts/add/' + productId, $localStorage.cartName)
             .then(function (response) {
                 $scope.loadCart();
             });

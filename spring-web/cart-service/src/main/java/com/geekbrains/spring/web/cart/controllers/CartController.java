@@ -1,13 +1,12 @@
-package com.geekbrains.spring.web.controllers;
+package com.geekbrains.spring.web.cart.controllers;
 
-import com.geekbrains.spring.web.dto.Cart;
-import com.geekbrains.spring.web.services.CartService;
+
+import com.geekbrains.spring.web.cart.dto.Cart;
+import com.geekbrains.spring.web.cart.service.CartService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-
 @RequestMapping("/api/v1/carts")
 @RequiredArgsConstructor
 public class CartController {

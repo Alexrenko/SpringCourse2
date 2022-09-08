@@ -29,7 +29,7 @@ angular.module('store-front').controller('orderController', function ($scope, $r
     }
 
     $scope.loadCart = function () {
-        $http.post(gatewayPath + '/core/api/v1/carts', $localStorage.cartName)
+        $http.post(gatewayPath + '/cart/api/v1/carts', $localStorage.cartName)
             .then(function (response) {
                 $scope.Cart = response.data;
             });

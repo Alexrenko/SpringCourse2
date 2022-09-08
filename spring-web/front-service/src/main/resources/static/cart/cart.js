@@ -4,7 +4,7 @@ angular.module('store-front').controller('cartController',
     const gatewayPath = 'http://localhost:5000';
 
     $scope.loadCart = function () {
-        $http.post(gatewayPath + '/core/api/v1/carts', $localStorage.cartName)
+        $http.post(gatewayPath + '/cart/api/v1/carts', $localStorage.cartName)
             .then(function (response) {
                 $scope.Cart = response.data;
 
@@ -12,7 +12,7 @@ angular.module('store-front').controller('cartController',
     }
 
     $scope.clearCart = function () {
-        $http.post(gatewayPath + '/core/api/v1/carts/clear', $localStorage.cartName)
+        $http.post(gatewayPath + '/cart/api/v1/carts/clear', $localStorage.cartName)
             .then(function (response) {
                 $scope.loadCart();
             });
@@ -28,6 +28,7 @@ angular.module('store-front').controller('cartController',
             .then(function (response) {
                 $scope.loadCart();
                 location.href = '#/orders.html';
+                $scope.orderDetails = null;
             });
     }
 

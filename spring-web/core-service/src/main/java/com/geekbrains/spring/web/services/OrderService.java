@@ -7,22 +7,36 @@ import com.geekbrains.spring.web.dto.Cart;
 import com.geekbrains.spring.web.dto.OrderDetailsDto;
 import com.geekbrains.spring.web.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class OrderService {
 
-    private final CartService cartService;
-    private final ProductService productService;
-    private final OrderRepository orderRepository;
+    @Autowired
+    private RestTemplate restTemplate;
 
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
     public Order createOrder(String username, OrderDetailsDto orderDetails, String cartName){
-        Cart currentCart = cartService.getCurrentCart(cartName);
+        Cart currentCart = restTemplate.postForObject(
+                "http://localhost:5003/cart-service/api/v1/carts", cartName, Cart.class
+        );
         Order order = new Order();
         order.setAddress(orderDetails.getAddress());
         order.setPhone(orderDetails.getPhone());

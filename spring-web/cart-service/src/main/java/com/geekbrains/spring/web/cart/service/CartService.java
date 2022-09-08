@@ -1,31 +1,44 @@
-package com.geekbrains.spring.web.services;
+package com.geekbrains.spring.web.cart.service;
 
-import com.geekbrains.spring.web.entities.Product;
-import com.geekbrains.spring.web.dto.Cart;
-import com.geekbrains.spring.web.exceptions.ResourceNotFoundException;
+import com.geekbrains.spring.web.cart.dto.Cart;
+import com.geekbrains.spring.web.cart.dto.ProductDto;
+import com.geekbrains.spring.web.cart.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class CartService {
-    private final ProductService productService;
-    private final CacheManager cacheManager;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private CacheManager cacheManager;
+
     private Cart cart;
     @Value("${other.cache.carts}")
     private String CARTS_CACHE;
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
     @Cacheable(value = "${other.cache.carts}", key = "#cartName")
     public Cart getCurrentCart(String cartName){
         cart = cacheManager.getCache(CARTS_CACHE).get(cartName, Cart.class);
         if(!Optional.ofNullable(cart).isPresent()){
-            cart = new Cart(cartName, cacheManager);
+            cart = new Cart(cartName);
             cacheManager.getCache(CARTS_CACHE).put(cartName, cart);
         }
         return cart;
@@ -34,8 +47,9 @@ public class CartService {
     @CachePut(value = "CartsCache", key = "#cartName")
     public Cart addProductByIdToCart(Long id, String cartName, int quantity){
         Cart cart = getCurrentCart(cartName);
-        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Не удалось найти продукт"));
-        cart.addProduct(product, quantity);
+        ProductDto productDto = restTemplate
+                .getForObject("http://localhost:5002/core-service/api/v1/products/" + id, ProductDto.class);
+        cart.addProduct(productDto, quantity);
         return cart;
     }
 
@@ -69,8 +83,9 @@ public class CartService {
     }
 
     private boolean isItemInTheCart(Long id){
-        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Не удалось найти продукт"));
-        if (cart.findOrderInItems(product) != null)
+        ProductDto productDto = restTemplate
+                .getForObject("http://localhost:5002/core-service/api/v1/products/" + id, ProductDto.class);
+        if (cart.findOrderInItems(productDto) != null)
             return true;
         return false;
     }
