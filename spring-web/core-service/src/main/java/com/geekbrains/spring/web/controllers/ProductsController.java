@@ -1,10 +1,11 @@
 package com.geekbrains.spring.web.controllers;
 
 import com.geekbrains.spring.web.converters.ProductConverter;
-import com.geekbrains.spring.web.dto.ProductDto;
+import com.geekbrains.spring.web.dtoLibrary.ProductDto;
 import com.geekbrains.spring.web.entities.Product;
 import com.geekbrains.spring.web.services.ProductService;
 import com.geekbrains.spring.web.exceptions.ResourceNotFoundException;
+
 import com.geekbrains.spring.web.validators.ProductValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

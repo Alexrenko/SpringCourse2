@@ -6,3 +6,7 @@ server:
 other:
   cache:
     carts: "CartsCache"
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    topic: "Orders_topic"

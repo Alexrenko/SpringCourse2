@@ -1,4 +1,4 @@
-package com.geekbrains.spring.web.dto;
+package com.geekbrains.spring.web.dtoLibrary;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,5 +1,7 @@
-package com.geekbrains.spring.web.dto;
+package com.geekbrains.spring.web;
 
+import com.geekbrains.spring.web.dtoLibrary.OrderItemDto;
+import com.geekbrains.spring.web.dtoLibrary.ProductDto;
 import lombok.Data;
 import org.springframework.cache.CacheManager;
 
@@ -10,7 +12,7 @@ import java.util.List;
 @Data
 public class Cart {
 
-    private List<OrderItemDto> items;
+    private List<com.geekbrains.spring.web.dtoLibrary.OrderItemDto> items;
     private  int totalPrice;
 
     public Cart() {

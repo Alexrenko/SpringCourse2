@@ -1,24 +1,23 @@
-package com.geekbrains.spring.web.front.config;
+package com.geekbrains.spring.web.config;
 
-import com.geekbrains.spring.web.front.dto.OrderComponentsDto;
+import com.geekbrains.spring.web.dtoLibrary.OrderDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaConfig {
+@EnableKafka
+public class KafkaConsumerConfig {
 
     @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
@@ -27,25 +26,11 @@ public class KafkaConfig {
     private String server;
 
     @Bean
-    public Map<String, Object> producerConfig(){
-        Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class);
-        return props;
+    public JsonDeserializer<OrderDto> jsonDeserializer() {
+        JsonDeserializer<OrderDto> jsonDeserializer = new JsonDeserializer<>();
+        jsonDeserializer.addTrustedPackages("*");
+        return jsonDeserializer;
     }
-
-    @Bean
-    public ProducerFactory<Long, OrderComponentsDto> producerFactory(){
-      return new DefaultKafkaProducerFactory<>(producerConfig());
-    }
-
-    @Bean(value = "KafkaTest")
-    public KafkaTemplate<Long, OrderComponentsDto> kafkaTemplate(){
-        return new KafkaTemplate<>(producerFactory());
-    }
-
-//----------------------------------------------------------
 
     @Bean
     public Map<String, Object> consumerConfig(){
@@ -59,23 +44,15 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConsumerFactory<Long, OrderComponentsDto> consumerFactory(){
+    public ConsumerFactory<Long, OrderDto> consumerFactory(){
         return new DefaultKafkaConsumerFactory<>(consumerConfig());
     }
 
     @Bean
-    public JsonDeserializer jsonDeserializer(){
-        JsonDeserializer jsonDeserializer = new JsonDeserializer();
-        jsonDeserializer.addTrustedPackages("*");
-        return jsonDeserializer;
-    }
-
-    @Bean
     public KafkaListenerContainerFactory<?> kafkaListenerContainerFactory(){
-        ConcurrentKafkaListenerContainerFactory<Long, OrderComponentsDto> factory =
+        ConcurrentKafkaListenerContainerFactory<Long, OrderDto> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
-
 }

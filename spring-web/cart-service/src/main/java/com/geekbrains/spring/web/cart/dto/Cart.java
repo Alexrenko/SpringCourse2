@@ -1,5 +1,7 @@
 package com.geekbrains.spring.web.cart.dto;
 
+import com.geekbrains.spring.web.dtoLibrary.OrderItemDto;
+import com.geekbrains.spring.web.dtoLibrary.ProductDto;
 import lombok.Data;
 
 import java.util.ArrayList;

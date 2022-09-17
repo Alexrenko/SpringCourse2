@@ -18,6 +18,11 @@ spring:
       enabled: true
       settings:
         web-allow-others: false
+  kafka:
+    consumer:
+      group-id: 2
+    bootstrap-servers: localhost:9092
+    topic: "Orders_topic"
 other:
   cache:
     carts: "CartsCache"

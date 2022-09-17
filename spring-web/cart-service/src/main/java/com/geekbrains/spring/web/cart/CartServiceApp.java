@@ -7,7 +7,9 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 @EnableCaching
 public class CartServiceApp {
+
     public static void main(String[] args) {
         SpringApplication.run(CartServiceApp.class, args);
     }
+
 }

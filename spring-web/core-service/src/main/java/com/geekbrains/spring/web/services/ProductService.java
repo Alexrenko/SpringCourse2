@@ -1,8 +1,8 @@
 package com.geekbrains.spring.web.services;
 
+import com.geekbrains.spring.web.dtoLibrary.ProductDto;
 import com.geekbrains.spring.web.entities.Product;
 import com.geekbrains.spring.web.repositories.ProductsRepository;
-import com.geekbrains.spring.web.dto.ProductDto;
 import com.geekbrains.spring.web.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.repositories.specifications.ProductsSpecifications;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +19,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductsRepository productsRepository;
-
-    public void print() {
-        System.out.println("Я ProductsService");
-    }
 
     public Page<Product> findAll(Integer minPrice, Integer maxPrice, String partTitle, Integer page) {
         Specification<Product> spec = Specification.where(null);

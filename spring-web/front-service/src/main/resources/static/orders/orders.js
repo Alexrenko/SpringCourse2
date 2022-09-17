@@ -8,10 +8,10 @@ angular.module('store-front').controller('orderController', function ($scope, $r
             "cartName":$localStorage.cartName,
             "address":$scope.orderDetails.address,
             "phone":$scope.orderDetails.phone,
-            "username":$localStorage.springWebUser.username
         }
         //$http.post(gatewayPath + '/core/api/v1/order', data)
-        $http.post('http://localhost:3000/front/api/v1/order', data)
+        $http.post(gatewayPath + '/cart/api/v1/carts/createOrder/', data)
+        //$http.post('http://localhost:3000/front/api/v1/order', data)
             .then(function (response) {
                 $scope.loadCart();
                 isCompleted = true;

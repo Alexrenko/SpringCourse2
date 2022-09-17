@@ -1,4 +1,4 @@
-package com.geekbrains.spring.web.dto;
+package com.geekbrains.spring.web.dtoLibrary;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDetailsDto {
-    private String address;
-    private String phone;
+public class ProfileDto {
+    private String username;
 }

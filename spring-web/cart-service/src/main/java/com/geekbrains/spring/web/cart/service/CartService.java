@@ -1,15 +1,17 @@
 package com.geekbrains.spring.web.cart.service;
 
 import com.geekbrains.spring.web.cart.dto.Cart;
-import com.geekbrains.spring.web.cart.dto.ProductDto;
 import com.geekbrains.spring.web.cart.exceptions.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
+import com.geekbrains.spring.web.dtoLibrary.OrderDetailsDto;
+import com.geekbrains.spring.web.dtoLibrary.OrderDto;
+import com.geekbrains.spring.web.dtoLibrary.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,6 +26,12 @@ public class CartService {
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Autowired
+    private KafkaTemplate<Long, OrderDto> kafkaTemplate;
+
+    @Value("${spring.kafka.topic}")
+    private String topic;
 
     private Cart cart;
     @Value("${other.cache.carts}")
@@ -90,6 +98,17 @@ public class CartService {
         return false;
     }
 
+    public void createOrder(String username, OrderDetailsDto orderDetailsDto, String cartName) {
+        Cart currentCart = getCurrentCart(cartName);
+        OrderDto order = new OrderDto();
+        order.setAddress(orderDetailsDto.getAddress());
+        order.setPhone(orderDetailsDto.getPhone());
+        order.setUsername(username);
+        order.setTotalPrice(currentCart.getTotalPrice());
+        order.setItems(currentCart.getItems());
+        currentCart.clear();
+        kafkaTemplate.send(topic, order);
+    }
 
 }
 

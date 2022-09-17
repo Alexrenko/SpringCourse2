@@ -2,7 +2,6 @@ package com.geekbrains.spring.web.tests;
 
 import com.geekbrains.spring.web.cart.CartServiceApp;
 import com.geekbrains.spring.web.cart.dto.Cart;
-import com.geekbrains.spring.web.cart.dto.ProductDto;
 import com.geekbrains.spring.web.cart.service.CartService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
