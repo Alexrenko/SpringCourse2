@@ -1,0 +1,16 @@
+<div>
+
+    <form novalidate>
+        <input class="form-control" type="text" placeholder="Номер телефона получателя"
+               ng-model="orderDetails.phone" ng-show="isUserLoggedIn() && Cart.items.length > 0">
+        <p></p>
+        <input class="form-control" type="text" placeholder="Адрес доставки"
+               ng-model="orderDetails.address" ng-show="isUserLoggedIn() && Cart.items.length > 0">
+        <p></p>
+    </form>
+    <p>
+        <button class="btn btn-secondary" ng-click="checkOut()"
+                ng-show="isUserLoggedIn() && Cart.items.length > 0">Оформить заказ</button>
+    </p>
+
+</div>
