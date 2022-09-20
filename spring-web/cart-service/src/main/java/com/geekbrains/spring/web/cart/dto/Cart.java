@@ -1,7 +1,7 @@
 package com.geekbrains.spring.web.cart.dto;
 
-import com.geekbrains.spring.web.dtoLibrary.OrderItemDto;
-import com.geekbrains.spring.web.dtoLibrary.ProductDto;
+import com.geekbrains.spring.web.lib.dto.OrderItemDto;
+import com.geekbrains.spring.web.lib.dto.ProductDto;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -33,13 +33,13 @@ public class Cart {
 
     public OrderItemDto findOrderInItems(ProductDto p){
         for(OrderItemDto o : items)
-            if(o.getProductId().equals(p.getId()))
+            if(o.getProductId() == p.getId())
                 return o;
         return null;
     }
 
     public void removeProduct(Long id){
-        items.removeIf(o -> o.getProductId().equals(id));
+        items.removeIf(o -> o.getProductId() == id);
         recalculate();
     }
 
@@ -47,7 +47,7 @@ public class Cart {
         Iterator<OrderItemDto> iter = items.iterator();
         while (iter.hasNext()){
             OrderItemDto o = iter.next();
-            if(o.getProductId().equals(id)){
+            if(o.getProductId() == id){
                 o.changeQuantity(delta);
                 if(o.getQuantity() <= 0){
                     iter.remove();

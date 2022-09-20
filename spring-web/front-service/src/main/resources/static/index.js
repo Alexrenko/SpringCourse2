@@ -18,6 +18,10 @@
                 templateUrl: 'orders/orders.html',
                 controller: 'orderController'
             })
+            .when('/orderlist', {
+                templateUrl: 'order_list/order_list.html',
+                controller: 'orderListController'
+            })
             .otherwise({
                 redirectTo: '/'
             });

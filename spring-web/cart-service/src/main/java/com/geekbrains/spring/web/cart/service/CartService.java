@@ -1,10 +1,11 @@
 package com.geekbrains.spring.web.cart.service;
 
+import com.geekbrains.spring.web.cart.api.ProductApi;
 import com.geekbrains.spring.web.cart.dto.Cart;
 import com.geekbrains.spring.web.cart.exceptions.ResourceNotFoundException;
-import com.geekbrains.spring.web.dtoLibrary.OrderDetailsDto;
-import com.geekbrains.spring.web.dtoLibrary.OrderDto;
-import com.geekbrains.spring.web.dtoLibrary.ProductDto;
+import com.geekbrains.spring.web.lib.dto.OrderDetailsDto;
+import com.geekbrains.spring.web.lib.dto.OrderDto;
+import com.geekbrains.spring.web.lib.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -15,6 +16,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,9 @@ public class CartService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private ProductApi productApi;
 
     @Autowired
     private CacheManager cacheManager;
@@ -36,6 +41,9 @@ public class CartService {
     private Cart cart;
     @Value("${other.cache.carts}")
     private String CARTS_CACHE;
+
+    @Value("${other.path.product-service}")
+    private String productServicePath;
 
     @Bean
     public RestTemplate restTemplate() {
@@ -55,8 +63,7 @@ public class CartService {
     @CachePut(value = "CartsCache", key = "#cartName")
     public Cart addProductByIdToCart(Long id, String cartName, int quantity){
         Cart cart = getCurrentCart(cartName);
-        ProductDto productDto = restTemplate
-                .getForObject("http://localhost:5002/core-service/api/v1/products/" + id, ProductDto.class);
+        ProductDto productDto = productApi.getProductById(id);
         cart.addProduct(productDto, quantity);
         return cart;
     }
@@ -92,7 +99,7 @@ public class CartService {
 
     private boolean isItemInTheCart(Long id){
         ProductDto productDto = restTemplate
-                .getForObject("http://localhost:5002/core-service/api/v1/products/" + id, ProductDto.class);
+                .getForObject(productServicePath + "/api/v1/products/" + id, ProductDto.class);
         if (cart.findOrderInItems(productDto) != null)
             return true;
         return false;
@@ -101,11 +108,12 @@ public class CartService {
     public void createOrder(String username, OrderDetailsDto orderDetailsDto, String cartName) {
         Cart currentCart = getCurrentCart(cartName);
         OrderDto order = new OrderDto();
+        order.setId(2L);
         order.setAddress(orderDetailsDto.getAddress());
         order.setPhone(orderDetailsDto.getPhone());
         order.setUsername(username);
         order.setTotalPrice(currentCart.getTotalPrice());
-        order.setItems(currentCart.getItems());
+        order.setItems(new ArrayList<>(currentCart.getItems()));
         currentCart.clear();
         kafkaTemplate.send(topic, order);
     }

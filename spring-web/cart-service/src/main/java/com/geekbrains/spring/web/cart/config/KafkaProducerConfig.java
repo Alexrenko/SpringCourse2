@@ -1,6 +1,6 @@
 package com.geekbrains.spring.web.cart.config;
 
-import com.geekbrains.spring.web.dtoLibrary.OrderDto;
+import com.geekbrains.spring.web.lib.dto.OrderDto;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.LongSerializer;
 import org.springframework.beans.factory.annotation.Value;

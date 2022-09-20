@@ -4,7 +4,7 @@ angular.module('store-front').controller('productController', function ($scope, 
 
     $scope.loadProducts = function (pageIndex = 1) {
         $http({
-            url: gatewayPath + '/core/api/v1/products',
+            url: gatewayPath + '/products/api/v1/products',
             method: 'GET',
             params: {
                 title_part: $scope.filter ? $scope.filter.title_part : null,

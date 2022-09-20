@@ -1,0 +1,22 @@
+<div>
+  <h3>Список заказов</h3>
+  <table class="table table-hover">
+    <tr>
+      <td>ID</td>
+      <td>Username</td>
+      <td>Total_Price</td>
+    </tr>
+    <tbody>
+    <tr ng-repeat="p in ProductsPage.content">
+      <td>{{p.id}}</td>
+      <td>{{p.title}}</td>
+      <td>{{p.price}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <p>
+    <button class="btn btn-primary" ng-click="checkOut()" ng-show="isUserLoggedIn()  && Cart.items.length > 0">Оформить заказ</button>
+  </p>
+
+</div>

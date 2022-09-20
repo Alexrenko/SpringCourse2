@@ -1,10 +1,14 @@
 package com.geekbrains.spring.web.cart.controllers;
 
 
+import com.geekbrains.spring.web.cart.api.ProductApi;
 import com.geekbrains.spring.web.cart.dto.Cart;
 import com.geekbrains.spring.web.cart.service.CartService;
-import com.geekbrains.spring.web.dtoLibrary.OrderDetailsDto;
+import com.geekbrains.spring.web.lib.dto.OrderDetailsDto;
+import com.geekbrains.spring.web.lib.dto.ProductDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -14,6 +18,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
+
+    @Autowired
+    private ProductApi productApi;
 
     @PostMapping
     public Cart getCurrentCart(@RequestBody String cartName){
@@ -53,6 +60,11 @@ public class CartController {
                 new OrderDetailsDto(map.get("address"), map.get("phone")),
                 map.get("cartName")
         );
+    }
+
+    @GetMapping("/testFeign")
+    public Page<ProductDto> getProductPages() {
+        return productApi.getAllProducts();
     }
 
 }
