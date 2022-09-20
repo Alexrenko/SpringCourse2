@@ -1,0 +1,15 @@
+server:
+  port: 5003
+  servlet:
+    context-path: /cart-service
+
+other:
+  cache:
+    carts: "CartsCache"
+  path:
+    product-service: "http://localhost:5004/product-service"
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    topic: "Orders_topic13"
